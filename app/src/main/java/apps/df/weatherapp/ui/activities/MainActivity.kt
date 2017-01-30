@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import apps.df.weatherapp.ui.adapters.ForecastListAdapter
 import apps.df.weatherapp.R
 import apps.df.weatherapp.data.Request
+import apps.df.weatherapp.domain.commands.RequestForecastCommand
 import kotlinx.android.synthetic.main.activity_main.*
 
 import org.jetbrains.anko.doAsync
@@ -31,14 +32,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val forecastList : RecyclerView = find(R.id.forecast_list)
         forecastList.layoutManager = LinearLayoutManager(this)
-        forecastList.adapter = ForecastListAdapter(items)
-
-        val url = "http://api.openweathermap.org/data/2.5/forecast/daily?" +
-                "APPID=15646a06818f61f7b8d7823ca833e1ce&q=94043&mode=json&units=metric&cnt=7"
+        //forecastList.adapter = ForecastListAdapter(items)
 
         doAsync {
-            Request(url).run()
-            uiThread { longToast("Request performed")}
+            val result = RequestForecastCommand("94043").execute()
+            uiThread {
+                forecastList.adapter = ForecastListAdapter(result)
+            }
         }
 
     }
