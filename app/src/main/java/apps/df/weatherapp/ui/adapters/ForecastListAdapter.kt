@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.TextView
+import apps.df.weatherapp.domain.model.Forecast
 import apps.df.weatherapp.domain.model.ForecastList
 
 /**
@@ -18,12 +19,16 @@ class ForecastListAdapter(val weekForecast: ForecastList ): RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(weekForecast.dailyForecast[position]) {
+        with(weekForecast[position]) {
             holder.textView.text = "$date - $description - $high/$low"
         }
     }
 
-    override fun getItemCount(): Int = weekForecast.dailyForecast.size
+    override fun getItemCount(): Int = weekForecast.size()
 
     class ViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
+
+    interface OnItemClickListener {
+        operator fun invoke(forecast: Forecast)
+    }
 }
